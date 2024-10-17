@@ -1,0 +1,65 @@
+MAC-1 (Stock): Waiting at the Intersection. Going towards ED1
+MAC-4 (Empty): Waiting at the Intersection. Going towards CSR1
+MAC-5 (Empty): Waiting at the Intersection. Going towards CSR2
+MAC-3 (Stock): Waiting at the Intersection. Going towards ED2
+MAC-2 (Stock): Waiting at the Intersection. Going towards ED2
+MAC-1 (Stock): Crossing intersection Checkpoint 1.
+MAC-1 (Stock): Crossing intersection Checkpoint 2.
+MAC-1 (Stock): Crossing intersection Checkpoint 3.
+MAC-1 (Stock): Crossed the intersection.
+Total crossed in Trail1: 1 Trail2: 0
+MAC-4 (Empty): Crossing intersection Checkpoint 1.
+MAC-1 (Empty): Waiting at the Intersection. Going towards CSR1
+MAC-4 (Empty): Crossing intersection Checkpoint 2.
+MAC-4 (Empty): Crossing intersection Checkpoint 3.
+MAC-4 (Empty): Crossed the intersection.
+Total crossed in Trail1: 2 Trail2: 0
+MAC-3 (Stock): Crossing intersection Checkpoint 1.
+MAC-3 (Stock): Crossing intersection Checkpoint 2.
+MAC-4 (Stock): Waiting at the Intersection. Going towards ED1
+MAC-3 (Stock): Crossing intersection Checkpoint 3.
+MAC-3 (Stock): Crossed the intersection.
+Total crossed in Trail1: 2 Trail2: 1
+MAC-5 (Empty): Crossing intersection Checkpoint 1.
+MAC-3 (Empty): Waiting at the Intersection. Going towards CSR2
+MAC-5 (Empty): Crossing intersection Checkpoint 2.
+MAC-5 (Empty): Crossing intersection Checkpoint 3.
+MAC-5 (Empty): Crossed the intersection.
+Total crossed in Trail1: 2 Trail2: 2
+MAC-2 (Stock): Crossing intersection Checkpoint 1.
+MAC-2 (Stock): Crossing intersection Checkpoint 2.
+MAC-5 (Stock): Waiting at the Intersection. Going towards ED2
+MAC-2 (Stock): Crossing intersection Checkpoint 3.
+MAC-2 (Stock): Crossed the intersection.
+Total crossed in Trail1: 2 Trail2: 3
+MAC-1 (Empty): Crossing intersection Checkpoint 1.
+MAC-1 (Empty): Crossing intersection Checkpoint 2.
+MAC-2 (Empty): Waiting at the Intersection. Going towards CSR2
+MAC-1 (Empty): Crossing intersection Checkpoint 3.
+MAC-1 (Empty): Crossed the intersection.
+Total crossed in Trail1: 3 Trail2: 3
+MAC-1: Finished.
+MAC-4 (Stock): Crossing intersection Checkpoint 1.
+MAC-4 (Stock): Crossing intersection Checkpoint 2.
+MAC-4 (Stock): Crossing intersection Checkpoint 3.
+MAC-4 (Stock): Crossed the intersection.
+Total crossed in Trail1: 4 Trail2: 3
+MAC-4: Finished.
+MAC-3 (Empty): Crossing intersection Checkpoint 1.
+MAC-3 (Empty): Crossing intersection Checkpoint 2.
+MAC-3 (Empty): Crossing intersection Checkpoint 3.
+MAC-3 (Empty): Crossed the intersection.
+Total crossed in Trail1: 4 Trail2: 4
+MAC-3: Finished.
+MAC-5 (Stock): Crossing intersection Checkpoint 1.
+MAC-5 (Stock): Crossing intersection Checkpoint 2.
+MAC-5 (Stock): Crossing intersection Checkpoint 3.
+MAC-5 (Stock): Crossed the intersection.
+Total crossed in Trail1: 4 Trail2: 5
+MAC-5: Finished.
+MAC-2 (Empty): Crossing intersection Checkpoint 1.
+MAC-2 (Empty): Crossing intersection Checkpoint 2.
+MAC-2 (Empty): Crossing intersection Checkpoint 3.
+MAC-2 (Empty): Crossed the intersection.
+Total crossed in Trail1: 4 Trail2: 6
+MAC-2: Finished.

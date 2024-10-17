@@ -1,0 +1,8 @@
+(0) H1 uses dispenser 1(time:4)
+(4) C1 uses dispenser 1(time:5)
+(9) H2 uses dispenser 1(time:3)
+(12) C2 uses dispenser 1(time:6)
+(18) H3 uses dispenser 1(time:1)
+(19) C3 uses dispenser 1(time:5)
+(24) H4 uses dispenser 1(time:2)
+(26) DONE

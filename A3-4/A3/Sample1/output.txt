@@ -1,0 +1,15 @@
+LRU - Fixed-Local Replacement:
+PID  Process Name      Turnaround Time  # Faults  Fault Times
+1    Process1.txt      29               5         {0, 5, 11, 18, 24}
+2    Process2.txt      33               5         {0, 6, 15, 20, 25}
+3    Process3.txt      17               1         {0}
+4    Process4.txt      32               4         {0, 10, 16, 24}
+
+------------------------------------------------------------
+
+LRU - Variable-Global Replacement:
+PID  Process Name      Turnaround Time  # Faults  Fault Times
+1    Process1.txt      29               5         {0, 5, 11, 18, 24}
+2    Process2.txt      33               5         {0, 6, 15, 20, 25}
+3    Process3.txt      17               1         {0}
+4    Process4.txt      32               4         {0, 10, 16, 24}
