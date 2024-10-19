@@ -54,7 +54,7 @@ public class FixedLocal {
                         }
                         int pageExecute = pageL.getFirst();
                         if(!mainMem.get(pN).contains(pageExecute)){                     // if page is not in main mem -> page fault
-                            System.out.println("page fault " +pageExecute+ " by " + pN + " at time " + time.get());
+                            System.out.println("page fault " + pageExecute+ " by " + pN + " at time " + time.get());
                             p.incrementFaultTime();
                             p.getFaultList().add(time.get());
                             p.setBlockingTime(time.get() + timeAddPage -1);
@@ -62,7 +62,7 @@ public class FixedLocal {
                             break;
                         }
                         else{           //execute the instruction
-                            System.out.println(pN + " Executed " + pageExecute + " at time " + time.get());
+                            //System.out.println(pN + " Executed " + pageExecute + " at time " + time.get());
                             modidyPage(p, pN, pageExecute);
                             pageL.removeFirst();
                             time.increment();
@@ -70,14 +70,14 @@ public class FixedLocal {
                             checkBlockingProcess();             // free blocked process first
                             if(roundRobin==timeQ){                  // time quantum expired process after
                                 roundRobin=0;
-                                System.out.println(p.getName() + " joined ready queue from time quantum at time " + time.get());
+                                //System.out.println(p.getName() + " joined ready queue from time quantum at time " + time.get());
                                 readyQueue.add(p);
                                 break;
                             }
                         }
                     }
                     else{
-                        System.out.println(pN +" finished at " + time.get());
+                        //System.out.println(pN +" finished at " + time.get());
                         processComplete.decrement();
                         p.setTurnaroundTime(time.get());
                         i=3;
@@ -94,9 +94,11 @@ public class FixedLocal {
     }
 
     public void addPage(Process p, String pName, int page){
-        if(mainMem.get(pName).size() == numF-1){
+        if(mainMem.get(pName).size() == numF){
+            //System.out.println("current number of frames of "+pName+": " + mainMem.get(pName).size());
             // keep track of least recently used by removing the page using and add it again when used
-            mainMem.get(pName).removeFirst();
+            /*int pageRemoved = */mainMem.get(pName).removeFirst();
+            //System.out.println(pageRemoved + " removed from " + pName );
         }
         mainMem.get(pName).add(page);
         blockedQueue.add(p);
