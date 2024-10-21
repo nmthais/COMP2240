@@ -90,7 +90,7 @@ public class FixedLocal {
         if(mainMem.get(pName).size() == numF){
             //System.out.println("current number of frames of "+pName+": " + mainMem.get(pName).size());
             // keep track of least recently used by removing the page using and add it again when used
-            /*int pageRemoved = */mainMem.get(pName).removeFirst();
+            mainMem.get(pName).removeFirst();
             //System.out.println(pageRemoved + " removed from " + pName );
         }
         mainMem.get(pName).add(page);

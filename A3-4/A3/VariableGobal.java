@@ -8,26 +8,38 @@
 */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class VariableGobal {
-    private ArrayList<Integer> mainMem;
+    private HashMap<String,ArrayList<Integer>> mainMem;
+    private ArrayList<Integer> cleanPageL;
     private ArrayList<Process> pList;
-    private Counter time, processCountdown;
+    private Counter time, processCountdown,frameCount;
     private int numF, timeQ;
     private ArrayList<Process> readyQueue, blockedQueue;
     private final int timeAddPage;
     
     public VariableGobal(ArrayList<Process> pList, int numFrames, int tQuantum){
-        this.mainMem = new ArrayList<>(); // should not exceed numFrames
+        this.mainMem = new HashMap<>();
+        for(int i=0;i<pList.size();i++){                        //setting up main memory
+            String pName = pList.get(i).getName();
+            mainMem.putIfAbsent(pName, new ArrayList<>());
+        }
+        this.frameCount = new Counter(numFrames);
+        this.cleanPageL = new ArrayList<>(numFrames); //  idea is to have 1 global queue, initially filled with null values, everytime allocate page to a process, write the page to null, sane idea to LRU
+        for(int i=0;i<30;i++){
+            cleanPageL.add(null);
+        }
         this.pList = pList;
         this.numF = numFrames;
         this.timeQ = tQuantum;
         this.time = new Counter();
         this.processCountdown = new Counter(pList.size());
-        this.readyQueue = new ArrayList<>();
+        this.readyQueue = new ArrayList<>(numFrames);
         this.blockedQueue = new ArrayList<>();
         this.timeAddPage =4;
+        System.out.println(cleanPageL.size());
     }
 
     public void Global(){
@@ -45,8 +57,9 @@ public class VariableGobal {
                 for(int i=0; i< timeQ;i++){   
                     if(!pageL.isEmpty()){           // if theres still page for execution
                         int pageExecute = pageL.getFirst();
-                        if(!mainMem.contains(pageExecute)){                     // if page is not in main mem -> page fault
+                        if(!mainMem.get(pN).contains(pageExecute)){                     // if page is not in main mem -> page fault
                             // System.out.println("page fault " + pageExecute+ " by " + pN + " at time " + time.get());
+                            checkNumFrame();
                             addPage(p, pN, pageExecute);            //swap the page needed in, takes 4 timeU
                             break;
                         }
@@ -90,12 +103,13 @@ public class VariableGobal {
             mainMem.removeFirst();
             //System.out.println(pageRemoved + " removed from " + pName );
         }
-        mainMem.add(page);
+        //mainMem
+        mainMem.get(pName).add(page);
         blockedQueue.add(p);
     }
     public void modidyPage(Process p, String pName, int page){          // remove the page, then add it again -> least recently used page will be the first in the list
-        mainMem.remove(Integer.valueOf(page));
-        mainMem.add(page);
+        cleanPageL.remove(Integer.valueOf(page));
+        cleanPageL.add(page);
     }
 
     public void checkBlockingProcess(){
@@ -107,6 +121,16 @@ public class VariableGobal {
                 readyQueue.add(blockedProcess);
                 iterator.remove();
             }
+        }
+    }
+
+    public void checkNumFrame(){
+        if(frameCount.get() >0){            //if theres still page avail, get that page, allocate it
+            frameCount.decrement();
+            //cleanPageL.removeFirst();
+        }
+        else if(frameCount.get() ==0){
+            cleanPageL
         }
     }
 
