@@ -10,7 +10,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class A3 {
@@ -19,17 +18,14 @@ public class A3 {
         A3 a3 = new A3();
         int numberFrames = Integer.parseInt(args[0]);
         int timeQuantum = Integer.parseInt(args[1]);
-        ArrayList<Process> pList = a3.Input(args);
-        HashMap<String,ArrayList<Integer>> mainMem = new HashMap<>();
-        if(pList !=null){
-            for(int i=0;i<pList.size();i++){                        //setting up main memory
-                String pName = pList.get(i).getName();
-                mainMem.putIfAbsent(pName, new ArrayList<>());
-            }
-            final int fixedNumF =numberFrames/pList.size();
-            FixedLocal f = new FixedLocal(mainMem, pList, fixedNumF, timeQuantum);
-            f.run();
-            //     VariableGobal v = new VariableGobal(p, numberFrames, timeQuantum);
+        ArrayList<Process> pListLocal = a3.Input(args);
+        ArrayList<Process> pListGlobal = a3.Input(args);
+        if(pListLocal !=null && pListGlobal!= null){
+            final int fixedNumF =numberFrames/pListLocal.size();
+            FixedLocal f = new FixedLocal(pListLocal, fixedNumF, timeQuantum);
+            f.Local();
+            VariableGobal v = new VariableGobal(pListGlobal, numberFrames, timeQuantum);
+            v.Global();
         }
     }
 

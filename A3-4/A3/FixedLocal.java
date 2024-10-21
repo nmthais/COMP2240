@@ -11,52 +11,44 @@ import java.util.*;
 public class FixedLocal {
     private HashMap<String,ArrayList<Integer>> mainMem;
     private ArrayList<Process> pList;
-    private Counter time, processComplete;
+    private Counter time, processCountdown;
     private int numF, timeQ;
     private ArrayList<Process> readyQueue, blockedQueue;
     private final int timeAddPage;
     
-    public FixedLocal(HashMap<String, ArrayList<Integer>> mainMem, ArrayList<Process> pList, int fixedNumF, int tQuantum){
-        this.mainMem = mainMem;
+    public FixedLocal(ArrayList<Process> pList, int fixedNumF, int tQuantum){
+        this.mainMem = new HashMap<>();
+        for(int i=0;i<pList.size();i++){                        //setting up main memory
+            String pName = pList.get(i).getName();
+            mainMem.putIfAbsent(pName, new ArrayList<>());
+        }
         this.pList = pList;
         this.time = new Counter();
-        this.processComplete = new Counter(pList.size());
+        this.processCountdown = new Counter(pList.size());
         this.numF = fixedNumF;
         this.timeQ = tQuantum;
         this.readyQueue = new ArrayList<>();
         this.timeAddPage =4;
-        blockedQueue = new ArrayList<>();
+        this.blockedQueue = new ArrayList<>();
     }
 
-    public void run(){
-        for(int i=0; i<pList.size();i++){           //pageFault at time 0
+    public void Local(){
+        for(int i=0; i<pList.size();i++){           //add 4 processes initially
             Process p = pList.get(i);
-            mainMem.get(p.getName()).add(p.getPageList().get(0));              //add first page to main
-            System.out.println("page fault " +p.getPageList().get(0)+ " by " + p.getName() + " at time " + time.get());
-            p.incrementFaultTime();
-            p.getFaultList().add(time.get());
             readyQueue.add(p);                         //add to readyQueue
-        }
-        time.addNumber(timeAddPage);                  // add time for 4 processes
-        
-        while(processComplete.get()!=0){
+        }   
+        while(processCountdown.get()>0){
             checkBlockingProcess();             // stuck at time 18 with p2, 1, 4 in blocked queue
             if(!readyQueue.isEmpty()){                      //process first in ready Queue
                 int roundRobin = 0;
                 Process p = readyQueue.removeFirst();       //check readyQueue
                 String pN = p.getName();
                 ArrayList<Integer> pageL = p.getPageList();  
-                for(int i=0; i< timeQ;i++){       //when removeFirst(), cant finish cause i< pageL.size()   
-                    if(!pageL.isEmpty()){
-                        if(time.get() ==25){
-                            System.out.println();
-                        }
+                for(int i=0; i< timeQ;i++){   
+                    if(!pageL.isEmpty()){           // if theres still page for execution
                         int pageExecute = pageL.getFirst();
                         if(!mainMem.get(pN).contains(pageExecute)){                     // if page is not in main mem -> page fault
-                            System.out.println("page fault " + pageExecute+ " by " + pN + " at time " + time.get());
-                            p.incrementFaultTime();
-                            p.getFaultList().add(time.get());
-                            p.setBlockingTime(time.get() + timeAddPage -1);
+                            // System.out.println("page fault " + pageExecute+ " by " + pN + " at time " + time.get());
                             addPage(p, pN, pageExecute);            //swap the page needed in, takes 4 timeU
                             break;
                         }
@@ -75,9 +67,9 @@ public class FixedLocal {
                             }
                         }
                     }
-                    else{
+                    else{           // if not the process is completed
                         //System.out.println(pN +" finished at " + time.get());
-                        processComplete.decrement();
+                        processCountdown.decrement();    
                         p.setTurnaroundTime(time.get());
                         i=3;
                         break;
@@ -92,6 +84,9 @@ public class FixedLocal {
     }
 
     public void addPage(Process p, String pName, int page){
+        p.incrementFaultTime();
+        p.getFaultList().add(time.get());
+        p.setBlockingTime(time.get() + timeAddPage -1);
         if(mainMem.get(pName).size() == numF){
             //System.out.println("current number of frames of "+pName+": " + mainMem.get(pName).size());
             // keep track of least recently used by removing the page using and add it again when used
@@ -112,7 +107,7 @@ public class FixedLocal {
         while(iterator.hasNext()){
             Process blockedProcess = iterator.next();
             if(blockedProcess.getBlockTime() <time.get()){
-                System.out.println(blockedProcess.getName() + " joined ready queue from blocked queue at time " + time.get());
+                //System.out.println(blockedProcess.getName() + " joined ready queue from blocked queue at time " + time.get());
                 readyQueue.add(blockedProcess);
                 iterator.remove();
             }

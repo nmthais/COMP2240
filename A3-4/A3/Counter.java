@@ -13,6 +13,7 @@ public class Counter {
     Counter(){
         this.i = 0;
     }
+
     Counter(int number){
         this.i = number;
     }
@@ -33,5 +34,4 @@ public class Counter {
         i += number;
     }
 
-    
 }
