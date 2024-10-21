@@ -35,7 +35,6 @@ public class FixedLocal {
             System.out.println("page fault " +p.getPageList().get(0)+ " by " + p.getName() + " at time " + time.get());
             p.incrementFaultTime();
             p.getFaultList().add(time.get());
-            //p.addBlockTime(timeAddPage);
             readyQueue.add(p);                         //add to readyQueue
         }
         time.addNumber(timeAddPage);                  // add time for 4 processes
@@ -83,7 +82,6 @@ public class FixedLocal {
                         i=3;
                         break;
                     }
-                    //readyQueue.add(p);
                 }
             }
             else{
@@ -113,7 +111,6 @@ public class FixedLocal {
         Iterator<Process> iterator = blockedQueue.iterator();
         while(iterator.hasNext()){
             Process blockedProcess = iterator.next();
-            //blockedProcess.decrementBlockTime();
             if(blockedProcess.getBlockTime() <time.get()){
                 System.out.println(blockedProcess.getName() + " joined ready queue from blocked queue at time " + time.get());
                 readyQueue.add(blockedProcess);
