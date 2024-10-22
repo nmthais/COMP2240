@@ -4,7 +4,7 @@
 * @author  Minh Thai Nguyen - c3440776 
 * @version 1.0
 * 
-* This file simalate paging
+* This file define an object counter
 */
 
 public class Counter {
