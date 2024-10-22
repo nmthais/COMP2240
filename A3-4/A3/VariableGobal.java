@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 public class VariableGobal {
-    private HashMap<String,ArrayList<Integer>> mainMem;
-    private ArrayList<Integer> cleanPageL;
+    private HashMap<String,ArrayList<Integer>> processes;
+    private ArrayList<String> cleanPageL;
     private ArrayList<Process> pList;
     private Counter time, processCountdown,frameCount;
     private int numF, timeQ;
@@ -21,25 +21,24 @@ public class VariableGobal {
     private final int timeAddPage;
     
     public VariableGobal(ArrayList<Process> pList, int numFrames, int tQuantum){
-        this.mainMem = new HashMap<>();
+        this.processes = new HashMap<>();
         for(int i=0;i<pList.size();i++){                        //setting up main memory
             String pName = pList.get(i).getName();
-            mainMem.putIfAbsent(pName, new ArrayList<>());
+            processes.putIfAbsent(pName, new ArrayList<>());
         }
-        this.frameCount = new Counter(numFrames);
-        this.cleanPageL = new ArrayList<>(numFrames); //  idea is to have 1 global queue, initially filled with null values, everytime allocate page to a process, write the page to null, sane idea to LRU
-        for(int i=0;i<30;i++){
+        this.numF = numFrames;
+        this.timeQ = tQuantum;
+        this.frameCount = new Counter(numF);
+        this.cleanPageL = new ArrayList<>();
+        for(int i=0;i<numF;i++){
             cleanPageL.add(null);
         }
         this.pList = pList;
-        this.numF = numFrames;
-        this.timeQ = tQuantum;
         this.time = new Counter();
         this.processCountdown = new Counter(pList.size());
-        this.readyQueue = new ArrayList<>(numFrames);
+        this.readyQueue = new ArrayList<>();
         this.blockedQueue = new ArrayList<>();
         this.timeAddPage =4;
-        System.out.println(cleanPageL.size());
     }
 
     public void Global(){
@@ -57,19 +56,23 @@ public class VariableGobal {
                 for(int i=0; i< timeQ;i++){   
                     if(!pageL.isEmpty()){           // if theres still page for execution
                         int pageExecute = pageL.getFirst();
-                        if(!mainMem.get(pN).contains(pageExecute)){                     // if page is not in main mem -> page fault
+                        if(!processes.get(pN).contains(pageExecute)){                     // if page is not in main mem -> page fault
                             // System.out.println("page fault " + pageExecute+ " by " + pN + " at time " + time.get());
-                            checkNumFrame();
+                            checkNumFrame(pN, pageExecute);
                             addPage(p, pN, pageExecute);            //swap the page needed in, takes 4 timeU
                             break;
                         }
                         else{           //execute the instruction
                             //System.out.println(pN + " Executed " + pageExecute + " at time " + time.get());
-                            modidyPage(p, pN, pageExecute);
+                            modidyPage(pN, pageExecute);
                             pageL.removeFirst();
                             time.increment();
                             roundRobin++;
                             checkBlockingProcess();             // free blocked process first
+                            if(pageL.isEmpty()){
+                                processFinish(p);
+                                break;
+                            }
                             if(roundRobin==timeQ){                  // time quantum expired process after
                                 roundRobin=0;
                                 //System.out.println(p.getName() + " joined ready queue from time quantum at time " + time.get());
@@ -80,9 +83,8 @@ public class VariableGobal {
                     }
                     else{           // if not the process is completed
                         //System.out.println(pN +" finished at " + time.get());
-                        processCountdown.decrement();    
-                        p.setTurnaroundTime(time.get());
-                        i=3;
+                        freeFrame(pN);
+                        processFinish(p);
                         break;
                     }
                 }
@@ -98,18 +100,12 @@ public class VariableGobal {
         p.incrementFaultTime();
         p.getFaultList().add(time.get());
         p.setBlockingTime(time.get() + timeAddPage -1);
-        if(mainMem.size() == numF){
-            //System.out.println("current number of frames of "+pName+": " + mainMem.get(pName).size());
-            mainMem.removeFirst();
-            //System.out.println(pageRemoved + " removed from " + pName );
-        }
-        //mainMem
-        mainMem.get(pName).add(page);
+        processes.get(pName).add(page);
         blockedQueue.add(p);
     }
-    public void modidyPage(Process p, String pName, int page){          // remove the page, then add it again -> least recently used page will be the first in the list
-        cleanPageL.remove(Integer.valueOf(page));
-        cleanPageL.add(page);
+    public void modidyPage(String pageName, int page){          // remove the page, then add it again -> least recently used page will be the first in the list
+        cleanPageL.remove(pageName + ": " + page);
+        cleanPageL.add(pageName + ": " + page);
     }
 
     public void checkBlockingProcess(){
@@ -124,19 +120,38 @@ public class VariableGobal {
         }
     }
 
-    public void checkNumFrame(){
+    public void checkNumFrame(String pageName, int page){
         if(frameCount.get() >0){            //if theres still page avail, get that page, allocate it
+            cleanPageL.add(pageName + ": " + page);
+            cleanPageL.removeFirst();
             frameCount.decrement();
-            //cleanPageL.removeFirst();
         }
         else if(frameCount.get() ==0){
-            cleanPageL
+            /*String pageDrop= */cleanPageL.removeFirst();
+            //System.out.println("Dropped page "+ pageDrop);
         }
+    }
+
+    public void freeFrame(String pName){
+        Iterator<String> pCheck = cleanPageL.iterator();
+        while (pCheck.hasNext()) {
+            String nameCheck = pCheck.next();
+            if(nameCheck.startsWith(pName)){
+                pCheck.remove();
+            }
+        }
+    }
+
+    public void processFinish(Process p){
+        // String pN = p.getName();
+        // System.out.println(pN +" finished at " + time.get());
+        processCountdown.decrement();    
+        p.setTurnaroundTime(time.get());
     }
 
     public void printResult() {
         // Print header
-        System.out.println("LRU - Variable-Global Replacement:");
+        System.out.println(" \n" + "LRU - Variable-Global Replacement:");
         System.out.println("PID  Process Name      Turnaround Time  # Faults  Fault Times");
         
         // Iterate through the list of processes
@@ -152,7 +167,5 @@ public class VariableGobal {
                               process.getFaultTime(),
                               process.getFaultList().toString());
         }
-
-        System.out.println("------------------------------------------------------------");
     }
 }

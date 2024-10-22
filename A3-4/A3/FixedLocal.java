@@ -53,13 +53,21 @@ public class FixedLocal {
                             break;
                         }
                         else{           //execute the instruction
-                            //System.out.println(pN + " Executed " + pageExecute + " at time " + time.get());
+                            if(time.get()==31){
+                                System.out.println();
+                            }
+                            // System.out.println(pN + " Executed " + pageExecute + " at time " + time.get());
                             modidyPage(p, pN, pageExecute);
                             pageL.removeFirst();
                             time.increment();
                             roundRobin++;
                             checkBlockingProcess();             // free blocked process first
-                            if(roundRobin==timeQ){                  // time quantum expired process after
+                            //check if process finishes
+                            if(pageL.isEmpty()){
+                                processFinish(p);
+                                break;
+                            }
+                            else if(roundRobin==timeQ){                  // time quantum expired process after
                                 roundRobin=0;
                                 //System.out.println(p.getName() + " joined ready queue from time quantum at time " + time.get());
                                 readyQueue.add(p);
@@ -68,10 +76,7 @@ public class FixedLocal {
                         }
                     }
                     else{           // if not the process is completed
-                        //System.out.println(pN +" finished at " + time.get());
-                        processCountdown.decrement();    
-                        p.setTurnaroundTime(time.get());
-                        i=3;
+                        processFinish(p);
                         break;
                     }
                 }
@@ -112,6 +117,13 @@ public class FixedLocal {
                 iterator.remove();
             }
         }
+    }
+
+    public void processFinish(Process p){
+        // String pN = p.getName();
+        // System.out.println(pN +" finished at " + time.get());
+        processCountdown.decrement();    
+        p.setTurnaroundTime(time.get());
     }
 
     public void printResult() {
