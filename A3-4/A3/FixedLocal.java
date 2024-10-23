@@ -41,12 +41,12 @@ public class FixedLocal {
             checkBlockingProcess();             // stuck at time 18 with p2, 1, 4 in blocked queue
             if(!readyQueue.isEmpty()){                      //process first in ready Queue
                 int roundRobin = 0;
-                Process p = readyQueue.removeFirst();       //check readyQueue
+                Process p = readyQueue.remove(0);       //check readyQueue
                 String pN = p.getName();
                 ArrayList<Integer> pageL = p.getPageList();  
                 for(int i=0; i< timeQ;i++){   
                     if(!pageL.isEmpty()){           // if theres still page for execution
-                        int pageExecute = pageL.getFirst();
+                        int pageExecute = pageL.get(0);
                         if(!mainMem.get(pN).contains(pageExecute)){                     // if page is not in main mem -> page fault
                             // System.out.println("page fault " + pageExecute+ " by " + pN + " at time " + time.get());
                             addPage(p, pN, pageExecute);            //swap the page needed in, takes 4 timeU
@@ -58,7 +58,7 @@ public class FixedLocal {
                             }
                             // System.out.println(pN + " Executed " + pageExecute + " at time " + time.get());
                             modidyPage(p, pN, pageExecute);
-                            pageL.removeFirst();
+                            pageL.remove(0);
                             time.increment();
                             roundRobin++;
                             checkBlockingProcess();             // free blocked process first
@@ -95,7 +95,7 @@ public class FixedLocal {
         if(mainMem.get(pName).size() == numF){
             //System.out.println("current number of frames of "+pName+": " + mainMem.get(pName).size());
             // keep track of least recently used by removing the page using and add it again when used
-            mainMem.get(pName).removeFirst();
+            mainMem.get(pName).remove(0);
             //System.out.println(pageRemoved + " removed from " + pName );
         }
         mainMem.get(pName).add(page);

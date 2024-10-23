@@ -50,12 +50,12 @@ public class VariableGobal {
             checkBlockingProcess();             // stuck at time 18 with p2, 1, 4 in blocked queue
             if(!readyQueue.isEmpty()){                      //process first in ready Queue
                 int roundRobin = 0;
-                Process p = readyQueue.removeFirst();       //check readyQueue
+                Process p = readyQueue.remove(0);       //check readyQueue
                 String pN = p.getName();
                 ArrayList<Integer> pageL = p.getPageList();  
                 for(int i=0; i< timeQ;i++){   
                     if(!pageL.isEmpty()){           // if theres still page for execution
-                        int pageExecute = pageL.getFirst();
+                        int pageExecute = pageL.get(0);
                         if(!processes.get(pN).contains(pageExecute)){                     // if page is not in main mem -> page fault
                             // System.out.println("page fault " + pageExecute+ " by " + pN + " at time " + time.get());
                             checkNumFrame(pN, pageExecute);
@@ -65,7 +65,7 @@ public class VariableGobal {
                         else{           //execute the instruction
                             //System.out.println(pN + " Executed " + pageExecute + " at time " + time.get());
                             modidyPage(pN, pageExecute);
-                            pageL.removeFirst();
+                            pageL.remove(0);
                             time.increment();
                             roundRobin++;
                             checkBlockingProcess();             // free blocked process first
@@ -123,11 +123,11 @@ public class VariableGobal {
     public void checkNumFrame(String pageName, int page){
         if(frameCount.get() >0){            //if theres still page avail, get that page, allocate it
             cleanPageL.add(pageName + ": " + page);
-            cleanPageL.removeFirst();
+            cleanPageL.remove(0);
             frameCount.decrement();
         }
         else if(frameCount.get() ==0){
-            /*String pageDrop= */cleanPageL.removeFirst();
+            /*String pageDrop= */cleanPageL.remove(0);
             //System.out.println("Dropped page "+ pageDrop);
         }
     }

@@ -9,7 +9,7 @@
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}",
-            "args": ["15", "3", "Process5.txt", "Process6.txt", "Process7.txt", "Process8.txt"],
+            "args": ["30", "3", "Process1.txt", "Process2.txt", "Process3.txt", "Process4.txt"],
         },
         {
             "type": "java",
@@ -17,7 +17,7 @@
             "request": "launch",
             "mainClass": "A3",
             "projectName": "A3_438f1e13",
-            "args": ["15", "3", "Process5.txt", "Process6.txt", "Process7.txt", "Process8.txt"],
+            "args": ["30", "3", "Process1.txt", "Process2.txt", "Process3.txt", "Process4.txt"],
             // ["15", "3", "Process5.txt", "Process6.txt", "Process7.txt", "Process8.txt"]
             // ["30", "3", "Process1.txt", "Process2.txt", "Process3.txt", "Process4.txt"]
         }
